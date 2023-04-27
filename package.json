@@ -1,0 +1,21 @@
+{
+  "name": "@dimkl/env",
+  "version": "0.0.1",
+  "description": "Load env config to class props",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "env",
+    "parser"
+  ],
+  "author": "Dimitris Klouvas <dimitris.klouvas@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
+}

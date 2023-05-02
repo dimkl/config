@@ -1,1 +1,1 @@
-export { env } from "./decorator";
+export { env, scope } from "./decorator";

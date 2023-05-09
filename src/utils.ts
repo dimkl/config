@@ -70,8 +70,3 @@ export function isEnvWrapped(target: any, key: string) {
 export function envWrap(target: any, key: string) {
   target[Symbol.for(`envWrapped:${key}`)] = true;
 }
-
-export function getFirst(key: string, ...sources: Record<string, any>[]) {
-  const source = sources.find((s) => s[key]);
-  return source && source[key];
-}

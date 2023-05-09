@@ -1,11 +1,9 @@
-import { envAdapter } from "./envAdapter";
 import {
   decorateFnToAllMethods,
   envWrap,
   isEnvWrapped,
   isDefined,
   toScreamingCase,
-  cloneStaticProperties,
   isInstanceMethod,
 } from "./utils";
 
@@ -17,6 +15,7 @@ type EnvDecorator<T = any> = {
 };
 
 const defaultValidate = (x: any) => x;
+const envAdapter = (key: string) => process.env[key];
 
 export function env({
   key,
@@ -66,27 +65,5 @@ export function env({
     return !propertyKey
       ? classWrapper(target)
       : propertyWrapper(target, propertyKey);
-  };
-}
-
-/**
- * Should decorate ONLY classes
- */
-export function scope(obj: any) {
-  const classWrapper = (constructor: any) => {
-    const Cls = class extends constructor {};
-    cloneStaticProperties(constructor, Cls, (value, key) =>
-      isDefined(obj[key]) ? obj[key] : value
-    );
-
-    return Cls as typeof constructor;
-  };
-
-  return (target: any, propertyKey?: string) => {
-    if (propertyKey) {
-      throw new Error("Can only be applied to class");
-    }
-
-    return classWrapper(target);
   };
 }

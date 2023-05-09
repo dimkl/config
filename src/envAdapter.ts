@@ -1,1 +1,1 @@
-export const envAdapter = process.env;
+export const envAdapter = (key: string) => process.env[key];

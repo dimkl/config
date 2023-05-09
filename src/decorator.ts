@@ -10,23 +10,25 @@ import {
 } from "./utils";
 
 type EnvDecorator<T = any> = {
+  key?: string;
   prefix?: string;
   validate?: (x: T) => T;
-  key?: string;
+  adapter?: (x: string) => T;
 };
 
 const defaultValidate = (x: any) => x;
 
 export function env({
-  prefix,
   key,
+  prefix,
   validate = defaultValidate,
+  adapter = envAdapter,
 }: EnvDecorator = {}) {
   const retrieveEnvValue = (propertyKey: string) => {
     const prefixedKey = [prefix, toScreamingCase(propertyKey)]
       .filter(Boolean)
       .join("_");
-    const value = key ? envAdapter[key] : envAdapter[prefixedKey];
+    const value = adapter(key || prefixedKey);
     if (isDefined(value)) return validate(value);
   };
 

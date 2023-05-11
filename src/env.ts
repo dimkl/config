@@ -1,10 +1,9 @@
 import {
   decorateFnToAllMethods,
-  envWrap,
-  isEnvWrapped,
   isDefined,
   toScreamingCase,
   isInstanceMethod,
+  OptionsHandler,
 } from "./utils";
 
 type EnvDecorator<T = any> = {
@@ -17,33 +16,34 @@ type EnvDecorator<T = any> = {
 const defaultValidate = (x: any) => x;
 const envAdapter = (key: string) => process.env[key];
 
-export function env({
-  key,
-  prefix,
-  validate = defaultValidate,
-  adapter = envAdapter,
-}: EnvDecorator = {}) {
-  const retrieveEnvValue = (propertyKey: string) => {
+export function env(options: EnvDecorator = {}) {
+  if (options.key?.trim()?.length === 0) {
+    throw new Error("Cannot use empty `key` option");
+  }
+
+  const retrieveEnvValue = (target: any, propertyKey: string) => {
+    const {
+      prefix,
+      key,
+      adapter = envAdapter,
+      validate = defaultValidate,
+    } = OptionsHandler.retrieve<EnvDecorator>(target, propertyKey);
     const prefixedKey = [prefix, toScreamingCase(propertyKey)]
       .filter(Boolean)
       .join("_");
     const value = adapter(key || prefixedKey);
     if (isDefined(value)) return validate(value);
+
+    return target[propertyKey];
   };
 
   const staticPropertyWrapper = (target: any, propertyKey: string) => {
-    if (isEnvWrapped(target, propertyKey)) return;
-
-    const value = retrieveEnvValue(propertyKey);
+    const value = retrieveEnvValue(target, propertyKey);
     target[propertyKey] = isDefined(value) ? value : target[propertyKey];
-    envWrap(target, propertyKey);
   };
 
   const instancePropertyWrapper = (target: any, propertyKey: string) => {
-    if (isEnvWrapped(target, propertyKey)) return;
-    envWrap(target, propertyKey);
-
-    const value = retrieveEnvValue(propertyKey);
+    const value = retrieveEnvValue(target, propertyKey);
     return {
       get: () => (isDefined(value) ? value : target[propertyKey]),
       set: () => null,
@@ -51,12 +51,17 @@ export function env({
   };
 
   const propertyWrapper = (target: any, propertyKey: string) => {
+    OptionsHandler.persist(target, options, propertyKey);
     return isInstanceMethod(target)
       ? instancePropertyWrapper(target, propertyKey)
       : staticPropertyWrapper(target, propertyKey);
   };
 
   const classWrapper = (constructor: any) => {
+    if (options.key) {
+      throw new Error("Cannot use `key` option when decorating class");
+    }
+    OptionsHandler.persist(constructor, options);
     decorateFnToAllMethods(constructor, retrieveEnvValue);
     return constructor;
   };

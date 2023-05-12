@@ -1,0 +1,43 @@
+name: Feature request
+description: File a feature request
+title: "[Feature]: "
+labels: ["feature"]
+assignees:
+  - dimkl
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: What?
+      description: What is the feature requested?
+      placeholder: ...
+    validations:
+      required: true
+  - type: textarea
+    id: feature-reason
+    attributes:
+      label: Why?
+      description: Why should this feature be added? Where it would help?
+      placeholder: ...
+    validations:
+      required: true
+  - type: textarea
+    id: feature-usage-example
+    attributes:
+      label: How?
+      description: How should it be implemented (API design or code changes)?
+      placeholder: ...
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

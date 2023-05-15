@@ -1,20 +1,20 @@
 import dotenv from "dotenv";
-import { env, scope } from "../src";
+import { config, scope } from "../src";
 
 dotenv.config({ path: "./examples/.env" });
 
 //
 // Example 1
 //
-@env({ prefix: "NEXT_PUBLIC" })
+@config({ prefix: "NEXT_PUBLIC" })
 class Config {
   static readonly url: string = "";
   static readonly key: string = "";
-  @env({ prefix: "APP" })
+  @config({ prefix: "APP" })
   static readonly secretKey: string = "";
-  @env({ key: "CUSTOM_KEY_WHATEVER" })
+  @config({ key: "CUSTOM_KEY_WHATEVER" })
   static readonly custom: string = "";
-  @env()
+  @config()
   static readonly databaseUrl: string = "";
 }
 
@@ -36,24 +36,24 @@ console.log(ScopedConfig.databaseUrl);
 // Example 3
 // Use Config class instance
 //
-@env({ prefix: "NEXT_PUBLIC" })
+@config({ prefix: "NEXT_PUBLIC" })
 class InstanceConfig {
   readonly url: string = "";
   readonly key: string = "";
-  @env({ prefix: "APP" })
+  @config({ prefix: "APP" })
   readonly secretKey: string = "";
-  @env({ key: "CUSTOM_KEY_WHATEVER" })
+  @config({ key: "CUSTOM_KEY_WHATEVER" })
   readonly custom: string = "";
-  @env()
+  @config()
   readonly databaseUrl: string = "";
 }
 
-const config = new InstanceConfig();
-console.log(config);
-console.log(Object.keys(config));
-console.log(config.url);
-console.log(config.secretKey);
-console.log(config.databaseUrl);
+const c = new InstanceConfig();
+console.log(c);
+console.log(Object.keys(c));
+console.log(c.url);
+console.log(c.secretKey);
+console.log(c.databaseUrl);
 
 //
 // Example 1
@@ -67,15 +67,15 @@ const VALUES: Record<string, string> = {
 
 const adapter = (x: string) => VALUES[x];
 
-@env({ prefix: "NEXT_PUBLIC", adapter })
+@config({ prefix: "NEXT_PUBLIC", adapter })
 class CustomAdapterConfig {
   static readonly url: string = "";
   static readonly key: string = "";
-  @env({ prefix: "APP", adapter })
+  @config({ prefix: "APP", adapter })
   static readonly secretKey: string = "";
-  @env({ key: "CUSTOM_KEY_WHATEVER", adapter })
+  @config({ key: "CUSTOM_KEY_WHATEVER", adapter })
   static readonly custom: string = "";
-  @env({ adapter })
+  @config({ adapter })
   static readonly databaseUrl: string = "";
 }
 

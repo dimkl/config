@@ -1,2 +1,2 @@
-export { env } from "./env";
+export { config } from "./config";
 export { scope } from "./scope";

@@ -6,7 +6,7 @@ import {
   OptionsHandler,
 } from "./utils";
 
-type EnvDecorator<T = any> = {
+type ConfigDecorator<T = any> = {
   key?: string;
   prefix?: string;
   validate?: (x: T) => T;
@@ -14,20 +14,20 @@ type EnvDecorator<T = any> = {
 };
 
 const defaultValidate = (x: any) => x;
-const envAdapter = (key: string) => process.env[key];
+const configAdapter = (key: string) => process.env[key];
 
-export function env(options: EnvDecorator = {}) {
+export function config(options: ConfigDecorator = {}) {
   if (options.key?.trim()?.length === 0) {
     throw new Error("Cannot use empty `key` option");
   }
 
-  const retrieveEnvValue = (target: any, propertyKey: string) => {
+  const retrieveValue = (target: any, propertyKey: string) => {
     const {
       prefix,
       key,
-      adapter = envAdapter,
+      adapter = configAdapter,
       validate = defaultValidate,
-    } = OptionsHandler.retrieve<EnvDecorator>(target, propertyKey);
+    } = OptionsHandler.retrieve<ConfigDecorator>(target, propertyKey);
     const prefixedKey = [prefix, toScreamingCase(propertyKey)]
       .filter(Boolean)
       .join("_");
@@ -38,12 +38,12 @@ export function env(options: EnvDecorator = {}) {
   };
 
   const staticPropertyWrapper = (target: any, propertyKey: string) => {
-    target[propertyKey] = retrieveEnvValue(target, propertyKey);
+    target[propertyKey] = retrieveValue(target, propertyKey);
   };
 
   const instancePropertyWrapper = (target: any, propertyKey: string) => {
     return {
-      get: () => retrieveEnvValue(target, propertyKey),
+      get: () => retrieveValue(target, propertyKey),
       set: () => null,
     };
   };
@@ -60,7 +60,7 @@ export function env(options: EnvDecorator = {}) {
       throw new Error("Cannot use `key` option when decorating class");
     }
     OptionsHandler.persist(constructor, options);
-    decorateFnToAllMethods(constructor, retrieveEnvValue);
+    decorateFnToAllMethods(constructor, retrieveValue);
     return constructor;
   };
 

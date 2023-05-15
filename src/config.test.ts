@@ -1,4 +1,4 @@
-import { env } from "./env";
+import { config } from "./config";
 
 const mockEnvs = (obj: Record<string, any>, callback: () => void) => {
   const initialValues: Record<string, any> = {};
@@ -9,13 +9,13 @@ const mockEnvs = (obj: Record<string, any>, callback: () => void) => {
   Object.assign(process.env, initialValues);
 };
 
-describe("@env()", () => {
+describe("@config()", () => {
   describe("decorating classes", () => {
     describe("without options", () => {
       test("sets values for each static property", () => {
         const envs = { SETTING_URL_A: "mocked_SETTING_URLA", URL_A: "mocked_URLA" };
         mockEnvs(envs, () => {
-          @env()
+          @config()
           class Config {
             static readonly urlA: string = "";
             static readonly settingUrlA: string = "";
@@ -31,7 +31,7 @@ describe("@env()", () => {
     describe("key", () => {
       test("raises error", () => {
         expect(() => {
-          @env({ key: "CUSTOM_KEY" })
+          @config({ key: "CUSTOM_KEY" })
           class Config {
             static readonly url: string = "";
             static readonly settingUrl: string = "";
@@ -47,7 +47,7 @@ describe("@env()", () => {
           PREFIX_URL: "mocked_PREFIX_URL",
         };
         mockEnvs(envs, () => {
-          @env({ prefix: "PREFIX" })
+          @config({ prefix: "PREFIX" })
           class Config {
             static readonly url: string = "";
             static readonly settingUrl: string = "";
@@ -69,7 +69,7 @@ describe("@env()", () => {
         };
         const adapter = (x: string) => VALUES[x];
 
-        @env({ prefix: "PREFIX", adapter })
+        @config({ prefix: "PREFIX", adapter })
         class Config {
           static readonly url: string = "";
           static readonly settingUrl: string = "";
@@ -91,7 +91,7 @@ describe("@env()", () => {
 
         mockEnvs(envs, () => {
           const clsValidateFn = (x: string) => `class(${x})`;
-          @env({ prefix: "PREFIX", validate: clsValidateFn })
+          @config({ prefix: "PREFIX", validate: clsValidateFn })
           class Config {
             static readonly url: string = "";
             static readonly settingUrl: string = "";
@@ -111,7 +111,7 @@ describe("@env()", () => {
         const adapter = (x: string) => VALUES[x];
         const clsValidateFn = (x: string) => `class(${x})`;
 
-        @env({ prefix: "PREFIX", adapter, validate: clsValidateFn })
+        @config({ prefix: "PREFIX", adapter, validate: clsValidateFn })
         class Config {
           static readonly url: string = "";
           static readonly settingUrl: string = "";
@@ -130,7 +130,7 @@ describe("@env()", () => {
 
     describe("initialized value when undefined", () => {
       test("sets values for each static property", () => {
-        @env()
+        @config()
         class Config {
           static readonly url: string = "initializedUrl";
           static readonly settingUrl: string = "initializedSettingUrl";
@@ -148,7 +148,7 @@ describe("@env()", () => {
         const envs = { SETTING_URL: "mocked_SETTING_URL", URL: "mocked_URL" };
         mockEnvs(envs, () => {
           class Config {
-            @env()
+            @config()
             static readonly url: string = "";
             static readonly settingUrl: string = "";
           }
@@ -167,9 +167,9 @@ describe("@env()", () => {
         };
         mockEnvs(envs, () => {
           class Config {
-            @env({ key: "CUSTOM_URL" })
+            @config({ key: "CUSTOM_URL" })
             static readonly url: string = "";
-            @env({ key: "CUSTOM_SETTING" })
+            @config({ key: "CUSTOM_SETTING" })
             static readonly settingUrl: string = "";
             static readonly otherUrl: string = "";
           }
@@ -182,7 +182,7 @@ describe("@env()", () => {
 
       test("raises error when empty string", () => {
         expect(() => {
-          @env({ key: "" })
+          @config({ key: "" })
           class Config {
             static readonly url: string = "";
             static readonly settingUrl: string = "";
@@ -200,11 +200,11 @@ describe("@env()", () => {
         };
         mockEnvs(envs, () => {
           class Config {
-            @env({ prefix: "PREFIX" })
+            @config({ prefix: "PREFIX" })
             static readonly url: string = "";
-            @env({ prefix: "OTHER_PREFIX" })
+            @config({ prefix: "OTHER_PREFIX" })
             static readonly settingUrl: string = "";
-            @env()
+            @config()
             static readonly otherUrl: string = "";
           }
 
@@ -220,9 +220,9 @@ describe("@env()", () => {
           PROPERTY_PREFIX_URL: "mocked_PROPERTY_PREFIX_URL",
         };
         mockEnvs(envs, () => {
-          @env({ prefix: "PREFIX" })
+          @config({ prefix: "PREFIX" })
           class Config {
-            @env({ prefix: "PROPERTY_PREFIX" })
+            @config({ prefix: "PROPERTY_PREFIX" })
             static readonly url: string = "";
             static readonly settingUrl: string = "";
           }
@@ -241,7 +241,7 @@ describe("@env()", () => {
         const adapter = (x: string) => VALUES[x];
 
         class Config {
-          @env({ prefix: "PREFIX", adapter })
+          @config({ prefix: "PREFIX", adapter })
           static readonly url: string = "";
           static readonly settingUrl: string = "";
         }
@@ -257,9 +257,9 @@ describe("@env()", () => {
         const adapter = (x: string) => VALUES[x];
         const propertyAdapter = (x: string) => `prop(${VALUES[x]})`;
 
-        @env({ adapter })
+        @config({ adapter })
         class Config {
-          @env({ prefix: "PREFIX", adapter: propertyAdapter })
+          @config({ prefix: "PREFIX", adapter: propertyAdapter })
           static readonly url: string = "";
           static readonly settingUrl: string = "";
         }
@@ -279,7 +279,7 @@ describe("@env()", () => {
         mockEnvs(envs, () => {
           const validate = (x: string) => `prop(${x})`;
           class Config {
-            @env({ prefix: "PREFIX", validate })
+            @config({ prefix: "PREFIX", validate })
             static readonly url: string = "";
             static readonly settingUrl: string = "";
           }
@@ -298,9 +298,9 @@ describe("@env()", () => {
         const validate = (x: string) => `prop(${x})`;
 
         class Config {
-          @env({ prefix: "PREFIX", adapter, validate })
+          @config({ prefix: "PREFIX", adapter, validate })
           static readonly url: string = "";
-          @env({ prefix: "OTHER_PREFIX", adapter, validate })
+          @config({ prefix: "OTHER_PREFIX", adapter, validate })
           static readonly settingUrl: string = "";
         }
 
@@ -319,10 +319,10 @@ describe("@env()", () => {
         mockEnvs(envs, () => {
           const clsValidateFn = (x: string) => `class(${x})`;
           const validate = (x: string) => `prop(${x})`;
-          @env({ prefix: "PREFIX", validate: clsValidateFn })
+          @config({ prefix: "PREFIX", validate: clsValidateFn })
           class Config {
             static readonly url: string = "";
-            @env({ validate })
+            @config({ validate })
             static readonly settingUrl: string = "";
           }
 
@@ -339,13 +339,13 @@ describe("@env()", () => {
         const envs = { SETTING_URL: "mocked_SETTING_URL", URL: "mocked_URL" };
         mockEnvs(envs, () => {
           class Config {
-            @env()
+            @config()
             readonly url: string = "";
             readonly settingUrl: string = "";
           }
-          const config = new Config();
-          expect(config.url).toEqual("mocked_URL");
-          expect(config.settingUrl).toEqual("");
+          const c = new Config();
+          expect(c.url).toEqual("mocked_URL");
+          expect(c.settingUrl).toEqual("");
         });
       });
     });
@@ -359,24 +359,24 @@ describe("@env()", () => {
         };
         mockEnvs(envs, () => {
           class Config {
-            @env({ key: "CUSTOM_URL" })
+            @config({ key: "CUSTOM_URL" })
             readonly url: string = "";
-            @env({ key: "CUSTOM_SETTING" })
+            @config({ key: "CUSTOM_SETTING" })
             readonly settingUrl: string = "";
             readonly otherUrl: string = "";
           }
 
-          const config = new Config();
-          expect(config.url).toEqual("mocked_CUSTOM_URL");
-          expect(config.settingUrl).toEqual("mocked_CUSTOM_SETTING");
-          expect(config.otherUrl).toEqual("");
+          const c = new Config();
+          expect(c.url).toEqual("mocked_CUSTOM_URL");
+          expect(c.settingUrl).toEqual("mocked_CUSTOM_SETTING");
+          expect(c.otherUrl).toEqual("");
         });
       });
 
       test("raises error when empty string", () => {
         expect(() => {
           class Config {
-            @env({ key: "" })
+            @config({ key: "" })
             readonly url: string = "";
             readonly settingUrl: string = "";
           }
@@ -393,18 +393,18 @@ describe("@env()", () => {
         };
         mockEnvs(envs, () => {
           class Config {
-            @env({ prefix: "PREFIX" })
+            @config({ prefix: "PREFIX" })
             readonly url: string = "";
-            @env({ prefix: "OTHER_PREFIX" })
+            @config({ prefix: "OTHER_PREFIX" })
             readonly settingUrl: string = "";
-            @env()
+            @config()
             readonly otherUrl: string = "";
           }
 
-          const config = new Config();
-          expect(config.url).toEqual("mocked_PREFIX_URL");
-          expect(config.settingUrl).toEqual("mocked_OTHER_PREFIX_SETTING_URL");
-          expect(config.otherUrl).toEqual("mocked_OTHER_URL");
+          const c = new Config();
+          expect(c.url).toEqual("mocked_PREFIX_URL");
+          expect(c.settingUrl).toEqual("mocked_OTHER_PREFIX_SETTING_URL");
+          expect(c.otherUrl).toEqual("mocked_OTHER_URL");
         });
       });
 
@@ -414,17 +414,17 @@ describe("@env()", () => {
           PROPERTY_PREFIX_URL: "mocked_PROPERTY_PREFIX_URL",
         };
         mockEnvs(envs, () => {
-          @env({ prefix: "CLASS_PREFIX" })
+          @config({ prefix: "CLASS_PREFIX" })
           class Config {
-            @env({ prefix: "PROPERTY_PREFIX" })
+            @config({ prefix: "PROPERTY_PREFIX" })
             readonly url: string = "";
-            @env({ prefix: "PREFIX" })
+            @config({ prefix: "PREFIX" })
             readonly settingUrl: string = "";
           }
 
-          const config = new Config();
-          expect(config.url).toEqual("mocked_PROPERTY_PREFIX_URL");
-          expect(config.settingUrl).toEqual("mocked_PREFIX_SETTING_URL");
+          const c = new Config();
+          expect(c.url).toEqual("mocked_PROPERTY_PREFIX_URL");
+          expect(c.settingUrl).toEqual("mocked_PREFIX_SETTING_URL");
         });
       });
     });
@@ -437,14 +437,14 @@ describe("@env()", () => {
         const adapter = (x: string) => VALUES[x];
 
         class Config {
-          @env({ prefix: "PREFIX", adapter })
+          @config({ prefix: "PREFIX", adapter })
           readonly url: string = "";
           readonly settingUrl: string = "";
         }
 
-        const config = new Config();
-        expect(config.url).toEqual("mocked_PREFIX_URL");
-        expect(config.settingUrl).toEqual("");
+        const c = new Config();
+        expect(c.url).toEqual("mocked_PREFIX_URL");
+        expect(c.settingUrl).toEqual("");
       });
 
       test("overrides class level adapter", () => {
@@ -454,15 +454,15 @@ describe("@env()", () => {
         const adapter = (x: string) => VALUES[x];
         const propertyAdapter = (x: string) => `prop(${VALUES[x]})`;
 
-        @env({ adapter })
+        @config({ adapter })
         class Config {
-          @env({ prefix: "PREFIX", adapter: propertyAdapter })
+          @config({ prefix: "PREFIX", adapter: propertyAdapter })
           readonly url: string = "";
           readonly settingUrl: string = "";
         }
 
-        const config = new Config();
-        expect(config.url).toEqual("prop(mocked_PREFIX_URL)");
+        const c = new Config();
+        expect(c.url).toEqual("prop(mocked_PREFIX_URL)");
         // TODO: fix this
         // expect(config.settingUrl).toEqual("");
       });
@@ -478,14 +478,14 @@ describe("@env()", () => {
         mockEnvs(envs, () => {
           const validate = (x: string) => `prop(${x})`;
           class Config {
-            @env({ prefix: "PREFIX", validate })
+            @config({ prefix: "PREFIX", validate })
             readonly url: string = "";
             readonly settingUrl: string = "";
           }
 
-          const config = new Config();
-          expect(config.url).toEqual("prop(mocked_PREFIX_URL)");
-          expect(config.settingUrl).toEqual("");
+          const c = new Config();
+          expect(c.url).toEqual("prop(mocked_PREFIX_URL)");
+          expect(c.settingUrl).toEqual("");
         });
       });
 
@@ -498,15 +498,15 @@ describe("@env()", () => {
         const validate = (x: string) => `prop(${x})`;
 
         class Config {
-          @env({ prefix: "PREFIX", adapter, validate })
+          @config({ prefix: "PREFIX", adapter, validate })
           readonly url: string = "";
-          @env({ prefix: "OTHER_PREFIX", adapter, validate })
+          @config({ prefix: "OTHER_PREFIX", adapter, validate })
           readonly settingUrl: string = "";
         }
 
-        const config = new Config();
-        expect(config.url).toEqual("prop(mocked_PREFIX_URL)");
-        expect(config.settingUrl).toEqual(
+        const c = new Config();
+        expect(c.url).toEqual("prop(mocked_PREFIX_URL)");
+        expect(c.settingUrl).toEqual(
           "prop(mocked_OTHER_PREFIX_SETTING_URL)"
         );
       });
@@ -520,15 +520,15 @@ describe("@env()", () => {
         mockEnvs(envs, () => {
           const clsValidate = (x: string) => `class(${x})`;
           const validate = (x: string) => `prop(${x})`;
-          @env({ prefix: "PREFIX", validate: clsValidate })
+          @config({ prefix: "PREFIX", validate: clsValidate })
           class Config {
-            @env({ prefix: "PREFIX", validate })
+            @config({ prefix: "PREFIX", validate })
             readonly url: string = "";
             readonly settingUrl: string = "";
           }
 
-          const config = new Config();
-          expect(config.url).toEqual("prop(mocked_PREFIX_URL)");
+          const c = new Config();
+          expect(c.url).toEqual("prop(mocked_PREFIX_URL)");
           // TODO: fix this
           // expect(config.settingUrl).toEqual("class(mocked_PREFIX_SETTING_URL)");
         });

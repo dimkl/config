@@ -13,15 +13,15 @@ describe("@env()", () => {
   describe("decorating classes", () => {
     describe("without options", () => {
       test("sets values for each static property", () => {
-        const envs = { SETTING_URL: "mocked_SETTING_URL", URL: "mocked_URL" };
+        const envs = { SETTING_URL_A: "mocked_SETTING_URLA", URL_A: "mocked_URLA" };
         mockEnvs(envs, () => {
           @env()
           class Config {
-            static readonly url: string = "";
-            static readonly settingUrl: string = "";
+            static readonly urlA: string = "";
+            static readonly settingUrlA: string = "";
           }
-          expect(Config.url).toEqual("mocked_URL");
-          expect(Config.settingUrl).toEqual("mocked_SETTING_URL");
+          expect(Config.urlA).toEqual("mocked_URLA");
+          expect(Config.settingUrlA).toEqual("mocked_SETTING_URLA");
         });
       });
 
@@ -126,6 +126,19 @@ describe("@env()", () => {
       test.todo(
         "returns validate result for each property value (retrieved from adapter)"
       );
+    });
+
+    describe("initialized value when undefined", () => {
+      test("sets values for each static property", () => {
+        @env()
+        class Config {
+          static readonly url: string = "initializedUrl";
+          static readonly settingUrl: string = "initializedSettingUrl";
+        }
+
+        expect(Config.url).toEqual("initializedUrl");
+        expect(Config.settingUrl).toEqual("initializedSettingUrl");
+      });
     });
   });
 

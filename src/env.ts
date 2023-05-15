@@ -38,14 +38,12 @@ export function env(options: EnvDecorator = {}) {
   };
 
   const staticPropertyWrapper = (target: any, propertyKey: string) => {
-    const value = retrieveEnvValue(target, propertyKey);
-    target[propertyKey] = isDefined(value) ? value : target[propertyKey];
+    target[propertyKey] = retrieveEnvValue(target, propertyKey);
   };
 
   const instancePropertyWrapper = (target: any, propertyKey: string) => {
-    const value = retrieveEnvValue(target, propertyKey);
     return {
-      get: () => (isDefined(value) ? value : target[propertyKey]),
+      get: () => retrieveEnvValue(target, propertyKey),
       set: () => null,
     };
   };

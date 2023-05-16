@@ -20,7 +20,7 @@ describe("@config()", () => {
         });
       });
 
-      test.todo("sets values for each property");
+      test.todo("sets values for each property -- not supported");
     });
 
     describe("key", () => {
@@ -53,7 +53,7 @@ describe("@config()", () => {
         });
       });
 
-      test.todo("sets values for each property");
+      test.todo("sets values for each property -- not supported");
     });
 
     describe("adapter", () => {
@@ -74,7 +74,9 @@ describe("@config()", () => {
         expect(Config.settingUrl).toEqual("mocked_PREFIX_SETTING_URL");
       });
 
-      test.todo("retrieves value from adapter for each property value");
+      test.todo(
+        "retrieves value from adapter for each property value -- not supported"
+      );
     });
 
     describe("validate", () => {
@@ -116,10 +118,12 @@ describe("@config()", () => {
         expect(Config.settingUrl).toEqual("class(mocked_PREFIX_SETTING_URL)");
       });
 
-      test.todo("returns validate result for each property value");
+      test.todo(
+        "returns validate result for each property value -- not supported"
+      );
 
       test.todo(
-        "returns validate result for each property value (retrieved from adapter)"
+        "returns validate result for each property value (retrieved from adapter) -- not supported"
       );
     });
 

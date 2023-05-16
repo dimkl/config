@@ -25,37 +25,9 @@ export function decorateFnToAllMethods(
   // });
 }
 
-type TransformFn = (value: any, key: string) => any;
-
-export function cloneStaticProperties(
-  source: any,
-  target: any,
-  transform: TransformFn = (x) => x
-) {
-  getStaticProperties(source).forEach((propertyKey) => {
-    target[propertyKey] = transform(source[propertyKey], propertyKey);
-    const options = OptionsHandler.retrieve(source, propertyKey);
-    if (options) {
-      OptionsHandler.persist(target, options, propertyKey);
-    }
-  });
-}
-
 export function isInstanceMethod(target: any): boolean {
   return !target.prototype;
 }
-
-export function getStaticProperties(constructor: Function): string[] {
-  return Object.getOwnPropertyNames(constructor).filter(
-    (m) => !["constructor", "length", "name", "prototype"].includes(m)
-  );
-}
-
-// export function getInstanceProperties(constructor: Function): string[] {
-//   return Object.getOwnPropertyNames(constructor.prototype).filter(
-//     (m) => !["constructor"].includes(m)
-//   );
-// }
 
 export function toScreamingCase(str: string): string {
   return str
@@ -89,3 +61,15 @@ export class OptionsHandler {
     return Symbol.for(["options", method].filter((x) => !!x).join(":"));
   }
 }
+
+function getStaticProperties(constructor: Function): string[] {
+  return Object.getOwnPropertyNames(constructor).filter(
+    (m) => !["constructor", "length", "name", "prototype"].includes(m)
+  );
+}
+
+// function getInstanceProperties(constructor: Function): string[] {
+//   return Object.getOwnPropertyNames(constructor.prototype).filter(
+//     (m) => !["constructor"].includes(m)
+//   );
+// }

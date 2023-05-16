@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { config, scope } from "../src";
+import { config } from "../src";
 
 dotenv.config({ path: "./examples/.env" });
 
@@ -21,16 +21,6 @@ class Config {
 console.log(Config);
 console.log(Object.keys(Config));
 console.log(Config.url);
-
-//
-// Example 2
-// Scoping Config class to override properties
-//
-const ScopedConfig = scope({ url: "1234" })(Config);
-
-console.log(Object.keys(ScopedConfig));
-console.log(ScopedConfig.url, Config.url);
-console.log(ScopedConfig.databaseUrl);
 
 //
 // Example 3

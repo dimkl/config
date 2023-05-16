@@ -1,19 +1,14 @@
 import { config } from "./config";
-
-const mockEnvs = (obj: Record<string, any>, callback: () => void) => {
-  const initialValues: Record<string, any> = {};
-  Object.keys(obj).forEach((k) => (initialValues[k] = process.env[k]));
-
-  Object.assign(process.env, obj);
-  callback();
-  Object.assign(process.env, initialValues);
-};
+import { mockEnvs } from "./testHelpers";
 
 describe("@config()", () => {
   describe("decorating classes", () => {
     describe("without options", () => {
       test("sets values for each static property", () => {
-        const envs = { SETTING_URL_A: "mocked_SETTING_URLA", URL_A: "mocked_URLA" };
+        const envs = {
+          SETTING_URL_A: "mocked_SETTING_URLA",
+          URL_A: "mocked_URLA",
+        };
         mockEnvs(envs, () => {
           @config()
           class Config {
@@ -506,9 +501,7 @@ describe("@config()", () => {
 
         const c = new Config();
         expect(c.url).toEqual("prop(mocked_PREFIX_URL)");
-        expect(c.settingUrl).toEqual(
-          "prop(mocked_OTHER_PREFIX_SETTING_URL)"
-        );
+        expect(c.settingUrl).toEqual("prop(mocked_OTHER_PREFIX_SETTING_URL)");
       });
 
       test("overrides class level validate", () => {

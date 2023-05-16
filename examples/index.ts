@@ -55,17 +55,17 @@ const VALUES: Record<string, string> = {
   CUSTOM_KEY_WHATEVER: "adapter_CUSTOM_KEY_WHATEVER",
 };
 
-const adapter = (x: string) => VALUES[x];
+const adapters = (x: string) => VALUES[x];
 
-@config({ prefix: "NEXT_PUBLIC", adapter })
+@config({ prefix: "NEXT_PUBLIC", adapters })
 class CustomAdapterConfig {
   static readonly url: string = "";
   static readonly key: string = "";
-  @config({ prefix: "APP", adapter })
+  @config({ prefix: "APP", adapters })
   static readonly secretKey: string = "";
-  @config({ key: "CUSTOM_KEY_WHATEVER", adapter })
+  @config({ key: "CUSTOM_KEY_WHATEVER", adapters })
   static readonly custom: string = "";
-  @config({ adapter })
+  @config({ adapters })
   static readonly databaseUrl: string = "";
 }
 

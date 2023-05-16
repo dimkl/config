@@ -62,9 +62,9 @@ describe("@config()", () => {
           PREFIX_URL: "mocked_PREFIX_URL",
           PREFIX_SETTING_URL: "mocked_PREFIX_SETTING_URL",
         };
-        const adapter = (x: string) => VALUES[x];
+        const adapters = (x: string) => VALUES[x];
 
-        @config({ prefix: "PREFIX", adapter })
+        @config({ prefix: "PREFIX", adapters })
         class Config {
           static readonly url: string = "";
           static readonly settingUrl: string = "";
@@ -72,6 +72,27 @@ describe("@config()", () => {
 
         expect(Config.url).toEqual("mocked_PREFIX_URL");
         expect(Config.settingUrl).toEqual("mocked_PREFIX_SETTING_URL");
+      });
+
+      test("with multiple adapters retrieves value from first adapter for each static property value", () => {
+        const VALUES: Record<string, string> = {
+          PREFIX_URL: "mocked_PREFIX_URL",
+          PREFIX_SETTING_URL: "mocked_PREFIX_SETTING_URL",
+          PREFIX_SETTING2_URL: "mocked_PREFIX_SETTING2_URL",
+        };
+        const adapter1 = (x: string) => VALUES[x];
+        const adapter2 = (x: string) => VALUES[x] + "2";
+
+        @config({ prefix: "PREFIX", adapters: [adapter1, adapter2] })
+        class Config {
+          static readonly url: string = "";
+          static readonly settingUrl: string = "";
+          static readonly setting2Url: string = "";
+        }
+
+        expect(Config.url).toEqual("mocked_PREFIX_URL");
+        expect(Config.settingUrl).toEqual("mocked_PREFIX_SETTING_URL");
+        expect(Config.setting2Url).toEqual("mocked_PREFIX_SETTING2_URL");
       });
 
       test.todo(
@@ -105,10 +126,10 @@ describe("@config()", () => {
           PREFIX_URL: "mocked_PREFIX_URL",
           PREFIX_SETTING_URL: "mocked_PREFIX_SETTING_URL",
         };
-        const adapter = (x: string) => VALUES[x];
+        const adapters = (x: string) => VALUES[x];
         const clsValidateFn = (x: string) => `class(${x})`;
 
-        @config({ prefix: "PREFIX", adapter, validate: clsValidateFn })
+        @config({ prefix: "PREFIX", adapters, validate: clsValidateFn })
         class Config {
           static readonly url: string = "";
           static readonly settingUrl: string = "";
@@ -237,10 +258,10 @@ describe("@config()", () => {
         const VALUES: Record<string, string> = {
           PREFIX_URL: "mocked_PREFIX_URL",
         };
-        const adapter = (x: string) => VALUES[x];
+        const adapters = (x: string) => VALUES[x];
 
         class Config {
-          @config({ prefix: "PREFIX", adapter })
+          @config({ prefix: "PREFIX", adapters })
           static readonly url: string = "";
           static readonly settingUrl: string = "";
         }
@@ -253,12 +274,12 @@ describe("@config()", () => {
         const VALUES: Record<string, string> = {
           PREFIX_URL: "mocked_PREFIX_URL",
         };
-        const adapter = (x: string) => VALUES[x];
+        const adapters = (x: string) => VALUES[x];
         const propertyAdapter = (x: string) => `prop(${VALUES[x]})`;
 
-        @config({ adapter })
+        @config({ adapters })
         class Config {
-          @config({ prefix: "PREFIX", adapter: propertyAdapter })
+          @config({ prefix: "PREFIX", adapters: propertyAdapter })
           static readonly url: string = "";
           static readonly settingUrl: string = "";
         }
@@ -293,13 +314,13 @@ describe("@config()", () => {
           PREFIX_URL: "mocked_PREFIX_URL",
           OTHER_PREFIX_SETTING_URL: "mocked_OTHER_PREFIX_SETTING_URL",
         };
-        const adapter = (x: string) => VALUES[x];
+        const adapters = (x: string) => VALUES[x];
         const validate = (x: string) => `prop(${x})`;
 
         class Config {
-          @config({ prefix: "PREFIX", adapter, validate })
+          @config({ prefix: "PREFIX", adapters, validate })
           static readonly url: string = "";
-          @config({ prefix: "OTHER_PREFIX", adapter, validate })
+          @config({ prefix: "OTHER_PREFIX", adapters, validate })
           static readonly settingUrl: string = "";
         }
 
@@ -433,10 +454,10 @@ describe("@config()", () => {
         const VALUES: Record<string, string> = {
           PREFIX_URL: "mocked_PREFIX_URL",
         };
-        const adapter = (x: string) => VALUES[x];
+        const adapters = (x: string) => VALUES[x];
 
         class Config {
-          @config({ prefix: "PREFIX", adapter })
+          @config({ prefix: "PREFIX", adapters })
           readonly url: string = "";
           readonly settingUrl: string = "";
         }
@@ -450,12 +471,12 @@ describe("@config()", () => {
         const VALUES: Record<string, string> = {
           PREFIX_URL: "mocked_PREFIX_URL",
         };
-        const adapter = (x: string) => VALUES[x];
+        const adapters = (x: string) => VALUES[x];
         const propertyAdapter = (x: string) => `prop(${VALUES[x]})`;
 
-        @config({ adapter })
+        @config({ adapters })
         class Config {
-          @config({ prefix: "PREFIX", adapter: propertyAdapter })
+          @config({ prefix: "PREFIX", adapters: propertyAdapter })
           readonly url: string = "";
           readonly settingUrl: string = "";
         }
@@ -493,13 +514,13 @@ describe("@config()", () => {
           PREFIX_URL: "mocked_PREFIX_URL",
           OTHER_PREFIX_SETTING_URL: "mocked_OTHER_PREFIX_SETTING_URL",
         };
-        const adapter = (x: string) => VALUES[x];
+        const adapters = (x: string) => VALUES[x];
         const validate = (x: string) => `prop(${x})`;
 
         class Config {
-          @config({ prefix: "PREFIX", adapter, validate })
+          @config({ prefix: "PREFIX", adapters, validate })
           readonly url: string = "";
-          @config({ prefix: "OTHER_PREFIX", adapter, validate })
+          @config({ prefix: "OTHER_PREFIX", adapters, validate })
           readonly settingUrl: string = "";
         }
 

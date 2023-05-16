@@ -6,15 +6,22 @@ import {
   OptionsHandler,
 } from "./utils";
 
+type AdapterFn<T> = (x: string) => T;
+
 type ConfigDecorator<T = any> = {
   key?: string;
   prefix?: string;
   validate?: (x: T) => T;
-  adapter?: (x: string) => T;
+  adapters?: AdapterFn<T> | AdapterFn<T>[];
 };
 
 const defaultValidate = (x: any) => x;
 const configAdapter = (key: string) => process.env[key];
+
+export function find<T>(sources: AdapterFn<T> | AdapterFn<T>[], x: string) {
+  const source = [sources].flat().find((fn) => fn(x));
+  return source && source(x);
+}
 
 export function config(options: ConfigDecorator = {}) {
   if (options.key?.trim()?.length === 0) {
@@ -25,13 +32,13 @@ export function config(options: ConfigDecorator = {}) {
     const {
       prefix,
       key,
-      adapter = configAdapter,
+      adapters = configAdapter,
       validate = defaultValidate,
     } = OptionsHandler.retrieve<ConfigDecorator>(target, propertyKey);
     const prefixedKey = [prefix, toScreamingCase(propertyKey)]
       .filter(Boolean)
       .join("_");
-    const value = adapter(key || prefixedKey);
+    const value = find(adapters, key || prefixedKey);
     if (isDefined(value)) return validate(value);
 
     return target[propertyKey];

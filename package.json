@@ -1,5 +1,8 @@
 {
   "author": "Dimitris Klouvas <dimitris.klouvas@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/dimkl/config/issues"
+  },
   "description": "Load config to class props",
   "devDependencies": {
     "@types/jest": "^29.5.11",
@@ -24,8 +27,12 @@
     "parser"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/index.js",
   "name": "@dimkl/config",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dimkl/config.git"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "prebuild": "rimraf dist",
@@ -33,5 +40,6 @@
     "preversion": "npm test",
     "test": "jest"
   },
-  "version": "0.0.1"
+  "types": "dist/index.d.ts",
+  "version": "0.1.0"
 }

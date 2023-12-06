@@ -1,4 +1,4 @@
-import { config } from "./config";
+import { config } from "../config";
 import { mockEnvs } from "./testHelpers";
 
 describe("@config()", () => {

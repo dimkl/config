@@ -14,5 +14,6 @@
     "module": "commonjs"
   },
   "include": ["src/**/*"],
+  "exclude": ["**/__tests__/*"],
   "ts-node": { "esm": true }
 }
